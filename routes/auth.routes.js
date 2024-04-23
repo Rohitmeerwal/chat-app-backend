@@ -1,0 +1,10 @@
+import authControllers from "../controllers/auth.controller.js";
+import express  from "express";
+import upload from "../middleware/multer.js";
+import protectRoutes from "../middleware/protectRoutes.js";
+const routes = express.Router();
+routes.post("/register",upload.single("profilePic") ,authControllers.register);
+routes.post("/login", authControllers.login);
+routes.post("/logout", authControllers.logout);
+routes.get("/fetch",protectRoutes, authControllers.fetchUser);
+export default routes;

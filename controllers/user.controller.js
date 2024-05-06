@@ -7,9 +7,8 @@ const getAllUser = {
       const filterUser = await userModel
         .find({ _id: { $ne: loggedInUser } })
         .select("-password");
-      return res.status(400).json(filterUser);
+      return res.status(200).json(filterUser);
     } catch (error) {
-      console.error("Error in getUsersForSidebar: ", error.message);
       res.status(500).json({ error: "Internal server error" });
     }
   },

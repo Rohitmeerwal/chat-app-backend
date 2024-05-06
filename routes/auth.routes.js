@@ -7,4 +7,5 @@ routes.post("/register",upload.single("profilePic") ,authControllers.register);
 routes.post("/login", authControllers.login);
 routes.post("/logout", authControllers.logout);
 routes.get("/fetch",protectRoutes, authControllers.fetchUser);
+routes.delete("/delete",protectRoutes, authControllers.deleteUser);
 export default routes;

@@ -96,6 +96,14 @@ const authControllers = {
       res.status(500).json({ error: "something went wrong" });
     }
   },
+  async fetchALLUser(req, res) {
+    try {
+      const user = await userModel.find();
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ error: "Something went wrong" });
+    }
+  },
   async deleteUser(req, res){
     try {
       // const user = await userModel.findById(req.user._id);

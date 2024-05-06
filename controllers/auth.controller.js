@@ -1,12 +1,12 @@
 import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import generateTokenandCookie from "../utils/generateToken.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 const authControllers = {
   async register(req, res) {
     try {
       const { fullName, userName, password, cpassword, gender } = req.body;
       const profilePic = req.file ? req.file.path : null;
-      console.log(profilePic, "profile");
       if (!(fullName && userName && password && cpassword && gender)) {
         return res
           .status(401)
@@ -19,8 +19,8 @@ const authControllers = {
           .json({ error: "Password and confirm password must match" });
       }
 
-      const hashPassword = await bcrypt.hash(password, 10);
-
+      // const hashPassword = await bcrypt.hash(password, 10);
+      const avatarimage = await uploadOnCloudinary(profilePic)
       const userCheck = await userModel.findOne({ userName });
       if (userCheck) {
         return res.status(403).json({ error: "Username already exists" });
@@ -29,9 +29,9 @@ const authControllers = {
       const newUser = new userModel({
         fullName,
         userName,
-        password: hashPassword,
+        password,
         gender,
-        profilePic,
+        profilePic:avatarimage?.url,
       });
 
       if (newUser) {
@@ -39,17 +39,12 @@ const authControllers = {
         await newUser.save();
 
         return res.status(200).json({
-          _id: newUser._id,
-          fullName: newUser.fullName,
-          userName: newUser.userName,
-          profilePic: newUser.profilePic,
           success: "User created successfully",
         });
       } else {
         return res.status(402).json({ error: "invaild user" });
       }
     } catch (error) {
-      console.error(error);
       return res.status(405).json({ error: "Internal server error" });
     }
   },
@@ -75,14 +70,10 @@ const authControllers = {
       generateTokenandCookie(userCheck._id, res);
 
       return res.status(200).json({
-        _id: userCheck._id,
-        fullName: userCheck.fullName,
-        userName: userCheck.userName,
-        profilePic: userCheck.profilePic,
         success: "User login successfully",
       });
     } catch (error) {
-      console.error(error);
+      
       return res.status(405).json({ error: "Internal server error" });
     }
   },
@@ -98,19 +89,25 @@ const authControllers = {
   },
   async fetchUser(req, res) {
     try {
-      const user = await userModel
-        .findByIdAndUpdate(
-          req.user._id,
-          {},
-          { select: "userName profilePic gender fullName" },
-        )
-        .exec();
+      const user = await userModel.findById(req.user._id);
       if (!user) return res.status(404).json({ error: "User not found" });
       await res.json({ user });
     } catch (error) {
-      console.log(error, "fetchError");
       res.status(500).json({ error: "something went wrong" });
     }
   },
+  async deleteUser(req, res){
+    try {
+      // const user = await userModel.findById(req.user._id);
+      // if (!user) {
+      //   return res.status(404).json({ message: 'User not found' });
+      // }
+      await userModel.deleteOne(( req.user._id));
+      res.status(200).json({ message: 'User deleted successfully' });
+    } catch (error) {
+      console.error(error);
+     res.status(500).json({ message: 'Internal Server Error' });
+    }
+  }
 };
 export default authControllers;

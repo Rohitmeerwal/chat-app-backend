@@ -7,8 +7,10 @@ import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import userRouter from "./routes/user.routes.js"
 import connectDB from "./config/connectDB.js";
-import { Toaster } from "react-hot-toast";
-const app = express();
+import { app, server } from "./socket/socket.js";
+
+
+// const app = express();
 const port = process.env.PORT || 8000;
 
 const DATABASEURL = process.env.MONGODB_URL;
@@ -26,6 +28,6 @@ app.use("/api/users", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/user", userRouter)
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`server listening on ${port}`);
 });

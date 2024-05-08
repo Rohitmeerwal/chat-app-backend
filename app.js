@@ -17,7 +17,7 @@ const DATABASEURL = process.env.MONGODB_URL;
 connectDB(DATABASEURL);
 app.use(cors(
   {
-    origin:"http://localhost:3001",
+    origin:"https://chat-app-zeta-rust.vercel.app/",
     preflightContinue:true,
     credentials:true
   }

@@ -18,6 +18,7 @@ connectDB(DATABASEURL);
 app.use(cors(
   {
     origin:"https://chat-app-git-master-rohitmeerwals-projects.vercel.app",
+    // origin:"http://localhost:3001",
     preflightContinue:true,
     credentials:true
   }

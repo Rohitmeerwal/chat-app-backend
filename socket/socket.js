@@ -3,10 +3,10 @@ import http from "http";
 import express from "express";
 
 const app = express();
-
 const server = http.createServer(app);
 const io = new Server(server, {
 	cors: {
+		// origin: ["http://localhost:3001"],
 		origin: ["https://chat-app-git-master-rohitmeerwals-projects.vercel.app"],
 		methods: ["GET", "POST"],
 	},
@@ -18,7 +18,7 @@ export const getReceiverSocketId = (receiverId) => {
 
 const userSocketMap = {};
 io.on("connection", (socket) => {
-	console.log("a user connected", socket.id);
+	// console.log("a user connected", socket.id);
 
 	const userId = socket.handshake.query.userId;
 	if (userId != "undefined") userSocketMap[userId] = socket.id;

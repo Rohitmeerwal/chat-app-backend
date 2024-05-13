@@ -19,7 +19,7 @@ const authControllers = {
           .json({ error: "Password and confirm password must match" });
       }
 
-      // const hashPassword = await bcrypt.hash(password, 10);
+      const hashPassword = await bcrypt.hash(password, 10);
       const avatarimage = await uploadOnCloudinary(profilePic)
       const userCheck = await userModel.findOne({ userName });
       if (userCheck) {
@@ -29,7 +29,7 @@ const authControllers = {
       const newUser = new userModel({
         fullName,
         userName,
-        password,
+        password:hashPassword,
         gender,
         profilePic:avatarimage?.url,
       });

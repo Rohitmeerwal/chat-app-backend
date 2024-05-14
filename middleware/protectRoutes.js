@@ -3,6 +3,7 @@ import userModel from "../models/userModel.js";
 
 const protectRoutes = async (req, res, next) => {
   try {
+    console.log('Cookies:', req.cookies);
     const token = req.cookies.jwt;
     console.log(token, "jwt token is valid");
     if (!token) {

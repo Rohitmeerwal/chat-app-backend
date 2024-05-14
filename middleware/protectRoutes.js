@@ -4,7 +4,9 @@ import userModel from "../models/userModel.js";
 const protectRoutes = async (req, res, next) => {
   try {
     const token = req.cookies.jwt;
+    console.log(token, "jwt token is valid");
     if (!token) {
+      console.error("No token provided");
       return res.status(401).json({ error: "no token provided" });
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
